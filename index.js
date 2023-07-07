@@ -13,10 +13,17 @@ const responder = (req,res,param)=>{
 const routes = {
     "GET":{
         "/": (req,res)=>{
-            responder(req,res,`<h1>Get Method / route </h1>`)
+           
+            const filepath = __dirname +"/index.html"
+            responder(req,res,filepath)
         },
-        "/home":(req,res)=> {
-            
+        "/index.html":(req,res)=>{
+            const filepath = __dirname + "/index.html"
+            responder(req,res,filepath)
+        },
+        "/about.html":(req,res)=>{
+            const filepath = __dirname + "/about.html"
+            responder(req,res,filepath)
         }
     },
     "POST":{
@@ -27,6 +34,10 @@ const routes = {
             let body ='';
            req.on('data',data=>{
             body +=data
+            if(body.length >1024){
+                res.writeHead(403,{"Content-Type":"text/html"})
+                res.end("<h1> File Size is too long !</h1>")
+            }
            })
            req.on('end',()=>{
             let  query = qs.parse(body)
@@ -64,7 +75,7 @@ const routes = {
 const server = http.createServer(startFunction)
 
 server.listen(process.env.PORT,()=>{
-    console.log(`Server is running ${process.env.PO}!`)
+    console.log(`Server is running ${process.env.PORT}!`)
 })
 
 
